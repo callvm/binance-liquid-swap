@@ -1,0 +1,24 @@
+{
+  "name": "binanceLiquid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dot-env": "0.0.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsdom": "^16.4.0",
+    "mongoose": "^5.10.10",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.6"
+  }
+}
