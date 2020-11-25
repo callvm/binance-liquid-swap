@@ -8,22 +8,22 @@ const summaryManager = new SummaryManager()
 
 poolRouter.get('/', async (req, res) => {
 
-    const summaries = await Summary.find({})
-    res.send(summaries.map(summary => {
-        return {
-            date: summary.date,
-            pools: summary.pools
-        }
-    }))
-
-})
-
-poolRouter.get('/latest', async (req, res) => {
-
     let ret = await summaryManager.getLatest()
     res.json(ret)
 
 })
+
+
+poolRouter.get('/coin', async (req, res) => {
+    try {
+        let result = await summaryManager.generateReport(req.body.total, req.body.interval, req.body.coin)
+        res.json(result)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+
 
 
 module.exports = poolRouter

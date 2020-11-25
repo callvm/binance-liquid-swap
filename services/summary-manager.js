@@ -1,44 +1,51 @@
 const Summary = require('../models/summary')
 
-SummaryMananger = function() {
+SummaryMananger = function () {
 
     this.getLatest = async () => {
         const summaries = await Summary.find({})
         const latest = summaries[summaries.length - 1]
-        const trend = await this.sevenDayTrend()
+        const trend = await this.generateReport(7)
+        console.log(trend)
 
-        for (pool of latest.pools){
-            pool.sevenDayTrend = trend.get(pool.name)
+        for (pool of latest.pools) {
+            pool.sevenDayTrend = trend[pool.name]
         }
 
         return latest
     }
 
-    this.sevenDayTrend = async () => {
-        
+    this.generateReport = async (total, interval=24, coin) => {
+
         const summaries = await Summary.find({})
-        const ret = new Map()
+        const ret = {}
 
-        // Start at the latest summary, reduce by index by 24 summaries each time (one day), and do this as long as
-        // we still have summaries and our array is <= 7 in length
+        // Start at the latest summary, reduce by index by interval summaries each time, and do this as long as
+        // we still have summaries and we've added less than the specified number of reports
+        
+        let added = 0
+        for (let i = summaries.length - 1; (i > 0 && added < total); i -= interval) {
 
-        for (let i = summaries.length - 1; (i > 0 && ret.size <= 7); i -= 24){
-            
             let summary = summaries[i]
             
             summary.pools.forEach(pool => {
-                
-                if (ret.has(pool.name)){                 
-                    let arr = ret.get(pool.name)
+                if (ret.hasOwnProperty(pool.name)) {
+                    let arr = ret[pool.name]
                     arr.push(Number(pool.daily))
-                    ret.set(pool.name, arr)
+                    ret[pool.name] = arr
                 } else {
-
-                    ret.set(pool.name, [Number(pool.daily)])
+                    ret[pool.name] = [Number(pool.daily)]
                 }
             })
+            added++
         }
 
+        if (coin !== undefined) {   
+            if (ret.hasOwnProperty(coin)) {
+                return ret[coin]
+            }
+            return ({ error: 'Coin not found' })
+        }
         return ret
     }
 
