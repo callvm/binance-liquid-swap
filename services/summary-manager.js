@@ -15,32 +15,33 @@ SummaryMananger = function () {
         return latest
     }
 
-    this.generateReport = async (total, interval=24, coin) => {
+    this.generateReport = async (total, interval = 24, coin) => {
 
         const summaries = await Summary.find({})
         const ret = {}
 
         // Start at the latest summary, reduce by index by interval summaries each time, and do this as long as
         // we still have summaries and we've added less than the specified number of reports
-        
+
         let added = 0
         for (let i = summaries.length - 1; (i > 0 && added < total); i -= interval) {
 
             let summary = summaries[i]
-            
+            let time = summary.date
+
             summary.pools.forEach(pool => {
                 if (ret.hasOwnProperty(pool.name)) {
                     let arr = ret[pool.name]
-                    arr.push(Number(pool.daily))
+                    arr.push({ time: time, amount: Number(pool.daily), coins: pool.coins })
                     ret[pool.name] = arr
                 } else {
-                    ret[pool.name] = [Number(pool.daily)]
+                    ret[pool.name] = [{ time: time, amount: Number(pool.daily), coins: pool.coins }]
                 }
             })
             added++
         }
 
-        if (coin !== undefined) {   
+        if (coin !== undefined) {
             if (ret.hasOwnProperty(coin)) {
                 return ret[coin]
             }

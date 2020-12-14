@@ -14,7 +14,7 @@ poolRouter.get('/', async (req, res) => {
 })
 
 
-poolRouter.get('/coin', async (req, res) => {
+poolRouter.post('/coin', async (req, res) => {
     try {
         let result = await summaryManager.generateReport(req.body.total, req.body.interval, req.body.coin)
         res.json(result)
