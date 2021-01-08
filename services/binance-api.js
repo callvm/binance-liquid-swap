@@ -1,5 +1,6 @@
 const fetch = require('node-fetch')
 const Summary = require('../models/summary')
+const config = require('../utils/config')
 
 BinanceAPI = function () {
 
@@ -7,19 +8,19 @@ BinanceAPI = function () {
 
         try {
 
-            let report = await fetch('https://www.binance.com/gateway-api/v1/public/swap-api/pool/pairList?type=STAKE')
+            let report = await fetch(config.BINANCE_API)
             let json = await report.json()
             let pools = []
 
             // Reduce the verbose info provided by Binance API down to just what we want
 
             json.data.forEach(coin => {
- 
+
                 let pool = {
 
                     name: coin.coinPair,
-                    weekly: coin.apyOneWeek,
-                    daily: coin.apyOneDay,
+                    daily: coin.yesterdayEarnRatio,
+                    usdValue: coin.poolShareValue,
 
                     coins: ((function (list) {
                         let ret = []

@@ -47,6 +47,6 @@ app.use(middleware.errorHandler)
 // Get the current report now, and again every 60 mins
 
 api.currentReport()
-//setInterval(api.currentReport, 3000) // 60000 * 60 * 1
+setInterval(api.currentReport, 60000 * 60 * 1)
 
 module.exports = app
