@@ -10,6 +10,18 @@ const summarySchema = new mongoose.Schema({
     pools: {
         type: [Object],
         required: true
+    },
+    coins: {
+        type: Object
+    },
+    usdValue: {
+        type: Number
+    },
+    volume: {
+        type: Number
+    },
+    fees: {
+        type: Number
     }
 
 })
